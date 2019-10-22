@@ -43,12 +43,44 @@ def success(request):
 	if 'userid' not in request.session:
 		return redirect('/')
 	else:
-		num = request.session['userid']
-		context = {
-			"user" : Reg.objects.get(id=num)
-		}
-		return render (request, 'app1/success.html', context)
+		return redirect('/wall')
 
 def clear(request):
 	request.session.clear()
 	return redirect('/')
+
+
+def wall(request):
+	this_user = Reg.objects.get(id=request.session['userid'])
+	all_messages = Message.objects.all().order_by('-updated_at')
+	# a_message = Message.objects.get(id=1)
+	# comments = a_message.comments.all()
+	comments = Comment.objects.all()
+
+	context = {
+		"user" : this_user,
+		"messages" : all_messages,
+		"comments" : comments
+	}
+	return render(request, 'app1/wall.html', context)
+
+def postm(request):
+
+	if request.method == "POST":
+		Message.objects.create(message=request.POST['message'], reg=Reg.objects.get(id=request.session['userid']))
+	return redirect('/wall')
+
+def postc(request):
+	if request.method == "POST":
+		num = request.POST['mess']
+		mess = Message.objects.get(id=num)
+		Comment.objects.create(comment=request.POST['comment'],  reg=Reg.objects.get(id=request.session['userid']), message=mess)
+	return redirect('/wall')
+
+def delete(request):
+	if request.method == "POST":
+
+		number = request.POST['delete']
+
+		Message.objects.get(id=number).delete()
+	return redirect('/wall')		

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Wall</title>
+	{% load static %}
+	<link rel="stylesheet" type="text/css" href="{% static 'app1/style.css' %}">
+</head>
+<body>
+	<div>
+		<h2>CodingDojo Wall</h2>
+		<p>Welcome {{user.first}}</p>
+		<a href="/clear">log off</a>
+	</div>
+	<form action="/postm" method="POST">
+		{% csrf_token %}
+		<h3>Post a message</h3>
+		<input type="text" name="message" id="message">
+		<input type="submit" value="Post a message">
+	</form>
+	{% if messages %}
+	{% for message in messages %}
+	<h3>{{message.reg.first}}- {{message.created_at}}</h3>
+	<p>{{message.message}}</p>
+
+	{% if message.reg == user %}
+	<form action="/delete" method="POST">
+		{% csrf_token %}		
+		<input type="hidden" name="delete" value={{message.id}}>
+		<input type="submit" value="Delete" id="delete">
+	</form>
+	{% endif %}
+
+	{% if comments %}
+	<div id="comment">
+	{% for comment in message.comments.all %}
+	<h3>{{comment.reg.first}}- {{comment.created_at}}</h3>
+	<p>{{comment.comment}}</p>
+	{% endfor %}
+	</div>
+	{% endif %}
+
+	<form action="postc" method="POST">
+		{% csrf_token %}
+		<p>Post a comment</p>
+		<input type="text" name="comment">
+		<input type="hidden" name="mess" value={{message.id}}>
+		<input type="submit" value="Post a comment">
+	</form>
+	{% endfor %}
+	{% endif %}
+</body>
+</html>

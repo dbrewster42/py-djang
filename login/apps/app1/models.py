@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 from django.db import models
 import re
-
+from datetime import datetime
 
 
 
@@ -31,7 +31,28 @@ class Reg(models.Model):
 	password = models.CharField(max_length=40)
 	objects = RegManager()
 
+# class MessageManager(models.Manager):
+# 	def validator(self, data):
+# 		errors = {}
+# 		Seconds = timedelta(data['create_at'])
 
+# 		if datetime.strptime(data['created_at']) != datetime.today() &&  
+# 		# datetime.strptime(data['date'], '%Y-%m-%d') > datetime.today(): datetime.datetime.now()
+# 			errors['date'] = "You may only delete your post within 30 minutes"
+# 		return errors
 
+class Message(models.Model):
+	message = models.TextField()
+	reg = models.ForeignKey(Reg, related_name="messages")
+	created_at = models.DateTimeField(auto_now_add=True)
+	updated_at = models.DateTimeField(auto_now=True)
+	# objects = MessageManager()
+
+class Comment(models.Model):
+	comment = models.TextField()
+	reg = models.ForeignKey(Reg, related_name="comments")
+	message = models.ForeignKey(Message, related_name="comments")
+	created_at = models.DateTimeField(auto_now_add=True)
+	updated_at = models.DateTimeField(auto_now=True)
 
 

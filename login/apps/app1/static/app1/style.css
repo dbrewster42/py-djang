@@ -8,3 +8,18 @@
 	display: inline-block;
 	width: 400px;
 }
+#message {
+	width: 500px;
+	height: 60px;
+	overflow: scroll;
+}
+#comment {
+	width: 400px;
+	margin-left: 50px;
+}
+p {
+	width: 600px;
+}
+#delete {
+	color: red;
+}

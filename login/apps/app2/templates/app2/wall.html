@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Wall</title>
+	{% load static %}
+	<link rel="stylesheet" type="text/css" href="{% static 'app1/style.css' %}">
+</head>
+<body>
+	<div>
+		<h2>CodingDojo Wall</h2>
+		<p>Welcome user</p>
+		<a href="/clear">log off</a>
+	</div>
+	<form action="/postm" method="POST">
+		{% csrf_token %}
+		<h3>Post a message</h3>
+		<input type="text" name="message" cols="30" rows="4">
+		<input type="submit" value="Post a message">
+	</form>
+	{% for message in messages %}
+	<h3>{{message.user}}- {{message.created_at}}</h3>
+	<p>{{message.message}}</p>
+	{% for comment in message.comments.all %}
+	<form action="postc" method="POST">
+		{% csrf_token %}
+		<p>Post a comment</p>
+		<input type="text" name="comment">
+		<input type="submit" name="Post a comment">
+	</form>
+	{% endfor %}
+	{% endfor %}
+</body>
+</html>
